@@ -1,21 +1,19 @@
 if (Meteor.isClient) {
   Meteor.subscribe('userData');
 
-  Template.hello.greeting = function () {
-    return "Welcome to MafiaClicker.";
+  Template.main.user = function() {
+    return Meteor.user();
   };
 
-  Template.hello.events({
-    'click input': function () {
-      // template data, if any, is available in 'this'
-      if (typeof console !== 'undefined')
-        console.log("You pressed the button");
+  Template.main.events({
+    'click input.crime': function() {
+      Meteor.call('click');
     }
   });
 }
 
 if (Meteor.isServer) {
-  Meteor.startup(function () {
+  Meteor.startup(function(){
     Accounts.onCreateUser(function(options, user) {
       user.money = 0;
       user.rate = 0;
@@ -27,3 +25,9 @@ if (Meteor.isServer) {
     return Meteor.users.find({}, {sort: {'money': -1}});
   });
 }
+
+Meteor.methods({
+  click: function() {
+    Meteor.users.update({_id: this.userId}, {$inc: {'money': 1}});
+  }
+});
