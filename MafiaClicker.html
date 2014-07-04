@@ -12,4 +12,8 @@
   <h2>You have ${{user.money}} and make ${{user.rate}} per second!</h2>
   
   <input type="button" class="crime btn span4" value="Pick a pocket. ($1)" />
+
+  {{#each items}}
+    <input type="button" class="buy btn span4" id="{{cost}}" value="Buy {{name}} (${{cost}})" />
+  {{/each}}
 </template>

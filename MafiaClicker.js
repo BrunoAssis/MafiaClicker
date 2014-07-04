@@ -5,9 +5,16 @@ if (Meteor.isClient) {
     return Meteor.user();
   };
 
+  Template.main.items = function() {
+    return [{name: "Kiddo", cost: 100}];
+  };
+
   Template.main.events({
     'click input.crime': function() {
       Meteor.call('click');
+    },
+    'click input.buy': function(event) {
+      Meteor.call('buy', event.target.id);
     }
   });
 }
@@ -29,5 +36,10 @@ if (Meteor.isServer) {
 Meteor.methods({
   click: function() {
     Meteor.users.update({_id: this.userId}, {$inc: {'money': 1}});
+  },
+  buy: function(amount) {
+    if (Meteor.user().money >= amount && amount > 0) {
+      Meteor.users.update({_id: this.userId}, {$inc: {'rate': (Math.floor(amount/500)), 'money': (0-amount)}});
+    }
   }
 });
